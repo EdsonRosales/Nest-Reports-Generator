@@ -11,7 +11,7 @@ interface CountryReportOptions {
 export const getCountryReport = (
   options: CountryReportOptions,
 ): TDocumentDefinitions => {
-  const { title, subTitle } = options;
+  const { title, subTitle, countries } = options;
 
   return {
     pageOrientation: 'landscape',
@@ -27,19 +27,18 @@ export const getCountryReport = (
           // headers are automatically repeated if the table spans over multiple pages
           // you can declare how many rows should be treated as headers
           headerRows: 1,
-          widths: ['*', 'auto', 100, '*'],
+          widths: [50, 50, 50, '*', 'auto', '*'],
 
           body: [
-            ['First', 'Second', 'Third', 'The last one'],
-            ['Value 1', 'Value 2', 'Value 3', 'Value 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
-            [{ text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4'],
+            ['ID', 'ISO2', 'ISO3', 'Name', 'Continent', 'Local Name'],
+            ...countries.map((country) => [
+              country.id.toString(),
+              country.iso2,
+              country.iso3,
+              { text: country.name, bold: true },
+              country.continent,
+              country.local_name,
+            ]),
           ],
         },
       },
