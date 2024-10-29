@@ -6,3 +6,6 @@ export * from './employment-letter-by-id.report';
 
 // Country report
 export * from './countries.report';
+
+// Order reports
+export * from './order-by-id.report';
