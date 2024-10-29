@@ -24,7 +24,8 @@ export const getCountryReport = (
     pageMargins: [40, 115, 40, 60],
     content: [
       {
-        layout: 'lightHorizontalLines', // optional
+        layout: 'customLayout01', // optional
+        // layout: 'lightHorizontalLines', // optional
         table: {
           // headers are automatically repeated if the table spans over multiple pages
           // you can declare how many rows should be treated as headers
