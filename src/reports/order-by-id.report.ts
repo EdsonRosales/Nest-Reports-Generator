@@ -26,10 +26,13 @@ export const OrderByIdReport = (): TDocumentDefinitions => {
     header: logo,
     pageMargins: [40, 60, 40, 60],
     content: [
+      // Header
       {
         text: 'Tucan Code',
         style: 'header',
       },
+
+      // Address & Invoice Details
       {
         columns: [
           {
@@ -41,6 +44,9 @@ export const OrderByIdReport = (): TDocumentDefinitions => {
           },
         ],
       },
+
+      // QR Code
+      { qr: 'https://google.com', fit: 75, alignment: 'right' },
     ],
   };
 };
