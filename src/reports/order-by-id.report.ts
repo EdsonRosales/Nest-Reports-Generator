@@ -3,7 +3,7 @@ import type {
   StyleDictionary,
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
-import { DateFormatter } from 'src/helpers';
+import { CurrencyFormatter, DateFormatter } from 'src/helpers';
 import { footerSection } from './sections/footer.setcion';
 
 const logo: Content = {
@@ -66,6 +66,81 @@ export const OrderByIdReport = (): TDocumentDefinitions => {
           Michael Holz
           Grenzacherweg 237`,
         ],
+      },
+
+      // Details order table
+      {
+        layout: 'headerLineOnly',
+        margin: [0, 20],
+        table: {
+          headerRows: 1,
+          widths: [50, '*', 'auto', 'auto', 'auto'],
+          body: [
+            ['ID', 'Description', 'Qty', 'Price', 'Total'],
+
+            [
+              '1',
+              'Product 1',
+              '2',
+              '10',
+              CurrencyFormatter.formatCurrency(100),
+            ],
+            [
+              '2',
+              'Product 2',
+              '1',
+              '20',
+              CurrencyFormatter.formatCurrency(1500),
+            ],
+            [
+              '3',
+              'Product 3',
+              '3',
+              '30',
+              {
+                text: CurrencyFormatter.formatCurrency(100),
+                alignment: 'right',
+              },
+            ],
+          ],
+        },
+      },
+
+      // line break
+      '\n\n',
+
+      // Total
+      {
+        columns: [
+          {
+            width: '*',
+            text: ' ',
+          },
+          {
+            width: 'auto',
+            layout: 'noBorders',
+            table: {
+              body: [
+                [
+                  'Subtotal',
+                  {
+                    text: CurrencyFormatter.formatCurrency(120),
+                    alignment: 'right',
+                  },
+                ],
+                [
+                  { text: 'Total', bold: true },
+                  {
+                    text: CurrencyFormatter.formatCurrency(150),
+                    alignment: 'right',
+                    bold: true,
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+        // margin: [0, 20],
       },
     ],
   };
