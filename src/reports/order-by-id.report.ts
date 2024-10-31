@@ -6,6 +6,46 @@ import type {
 import { CurrencyFormatter, DateFormatter } from 'src/helpers';
 import { footerSection } from './sections/footer.setcion';
 
+export interface CompleteOrderData {
+  order_id: number;
+  customer_id: number;
+  order_date: Date;
+  customers: Customers;
+  order_details: OrderDetail[];
+}
+
+export interface Customers {
+  customer_id: number;
+  customer_name: string;
+  contact_name: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  country: string;
+}
+
+export interface OrderDetail {
+  order_detail_id: number;
+  order_id: number;
+  product_id: number;
+  quantity: number;
+  products: Products;
+}
+
+export interface Products {
+  product_id: number;
+  product_name: string;
+  category_id: number;
+  unit: string;
+  price: string;
+}
+
+interface OrderByIdReportOptions {
+  title?: string;
+  subtitle?: string;
+  data: CompleteOrderData;
+}
+
 const logo: Content = {
   image: 'src/assets/tucan-banner.png',
   width: 100,
@@ -26,7 +66,12 @@ const styles: StyleDictionary = {
   },
 };
 
-export const OrderByIdReport = (): TDocumentDefinitions => {
+export const OrderByIdReport = (
+  options: OrderByIdReportOptions,
+): TDocumentDefinitions => {
+  const { data } = options;
+  console.log(data);
+
   return {
     styles: styles,
     header: logo,
