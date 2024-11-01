@@ -5,46 +5,13 @@ import type {
 } from 'pdfmake/interfaces';
 import { CurrencyFormatter, DateFormatter } from 'src/helpers';
 import { footerSection } from './sections/footer.setcion';
+import type { CompleteOrderData } from 'src/interfaces';
 
-export interface CompleteOrderData {
-  order_id: number;
-  customer_id: number;
-  order_date: Date;
-  customers: Customers;
-  order_details: OrderDetail[];
-}
-
-export interface Customers {
-  customer_id: number;
-  customer_name: string;
-  contact_name: string;
-  address: string;
-  city: string;
-  postal_code: string;
-  country: string;
-}
-
-export interface OrderDetail {
-  order_detail_id: number;
-  order_id: number;
-  product_id: number;
-  quantity: number;
-  products: Products;
-}
-
-export interface Products {
-  product_id: number;
-  product_name: string;
-  category_id: number;
-  unit: string;
-  price: string;
-}
-
-interface OrderByIdReportOptions {
+type OrderByIdReportOptions = {
   title?: string;
   subtitle?: string;
   data: CompleteOrderData;
-}
+};
 
 const logo: Content = {
   image: 'src/assets/tucan-banner.png',
@@ -70,7 +37,14 @@ export const OrderByIdReport = (
   options: OrderByIdReportOptions,
 ): TDocumentDefinitions => {
   const { data } = options;
-  console.log(data);
+  const { customers, order_details, order_date, order_id } = data;
+
+  const subTotal = order_details.reduce(
+    (acc, detail) => acc + detail.quantity * +detail.products.price,
+    0,
+  );
+
+  const total = subTotal * 1.15;
 
   return {
     styles: styles,
@@ -92,8 +66,8 @@ export const OrderByIdReport = (
           },
           {
             text: [
-              { text: 'Invoice No. 123456\n', bold: true },
-              `Date: ${DateFormatter.formatDate(new Date())}\nDue Date: ${DateFormatter.formatDate(new Date())}\n`,
+              { text: `Invoice No. ${order_id}\n`, bold: true },
+              `Date: ${DateFormatter.formatDate(order_date)}\nDue Date: ${DateFormatter.formatDate(new Date())}\n`,
             ],
             alignment: 'right',
           },
@@ -107,9 +81,9 @@ export const OrderByIdReport = (
       {
         text: [
           { text: 'Bill To: \n', style: 'subHeader' },
-          `Razón Social: Richter Supermarkt
-          Michael Holz
-          Grenzacherweg 237`,
+          `Razón Social: ${customers.customer_name},
+          ${customers.city},
+          ${customers.address}`,
         ],
       },
 
@@ -123,30 +97,23 @@ export const OrderByIdReport = (
           body: [
             ['ID', 'Description', 'Qty', 'Price', 'Total'],
 
-            [
-              '1',
-              'Product 1',
-              '2',
-              '10',
-              CurrencyFormatter.formatCurrency(100),
-            ],
-            [
-              '2',
-              'Product 2',
-              '1',
-              '20',
-              CurrencyFormatter.formatCurrency(1500),
-            ],
-            [
-              '3',
-              'Product 3',
-              '3',
-              '30',
+            ...order_details.map((orderDetail) => [
+              orderDetail.order_detail_id.toString(),
+              orderDetail.products.product_name,
+              orderDetail.quantity.toString(),
               {
-                text: CurrencyFormatter.formatCurrency(100),
+                text: CurrencyFormatter.formatCurrency(
+                  +orderDetail.products.price,
+                ),
                 alignment: 'right',
               },
-            ],
+              {
+                text: CurrencyFormatter.formatCurrency(
+                  +orderDetail.products.price * orderDetail.quantity,
+                ),
+                alignment: 'right',
+              },
+            ]),
           ],
         },
       },
@@ -169,14 +136,14 @@ export const OrderByIdReport = (
                 [
                   'Subtotal',
                   {
-                    text: CurrencyFormatter.formatCurrency(120),
+                    text: CurrencyFormatter.formatCurrency(subTotal),
                     alignment: 'right',
                   },
                 ],
                 [
                   { text: 'Total', bold: true },
                   {
-                    text: CurrencyFormatter.formatCurrency(150),
+                    text: CurrencyFormatter.formatCurrency(total),
                     alignment: 'right',
                     bold: true,
                   },
@@ -185,7 +152,6 @@ export const OrderByIdReport = (
             },
           },
         ],
-        // margin: [0, 20],
       },
     ],
   };

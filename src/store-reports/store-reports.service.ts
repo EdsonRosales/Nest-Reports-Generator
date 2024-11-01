@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import type { CompleteOrderData } from 'src/interfaces';
 import { PrinterService } from 'src/printer/printer.service';
-import { CompleteOrderData, OrderByIdReport } from 'src/reports';
+import { OrderByIdReport } from 'src/reports';
 
 @Injectable()
 export class StoreReportsService extends PrismaClient implements OnModuleInit {
