@@ -9,3 +9,6 @@ export * from './countries.report';
 
 // Order reports
 export * from './order-by-id.report';
+
+// SVG reports
+export * from './basic-chart-svg.report';
